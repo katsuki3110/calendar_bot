@@ -28,29 +28,40 @@ class LineBotController < ApplicationController
             #今日の予定をDBより抽出
             today_calendar = Calendar.where(user: user, date: Date.today.strftime('%Y%m%d')).select("content")
 
-            #今日の予定を初期化
-            today_plans = ""
-            #該当するユーザーの今日の予定内容を抽出
-            for num in 0..today_calendar.count - 1 do
-              if num == 0
-                today_plans = "・" + today_calendar[num].content
-              else
-                today_plans = "#{today_plans}\n・#{today_calendar[num].content}"
+            #今日の予定があるか確認
+            if today_calendar.present?
+              #今日の予定を初期化
+              today_plans = ""
+              #該当するユーザーの今日の予定内容を抽出
+              for num in 0..today_calendar.count - 1 do
+                if num == 0
+                  today_plans = "・" + today_calendar[num].content
+                else
+                  today_plans = "#{today_plans}\n・#{today_calendar[num].content}"
+                end
               end
+
+              #今日の予定を送信
+              message = {
+                type: 'text',
+                text: "#{date}の予定\n#{today_plans}"
+              }
+            else
+              #今日の予定がない場合
+              message = {
+                type: 'text',
+                text: "今日の予定はなし！"
+              }
             end
 
-            #今日の予定を送信
-            message = {
-              type: 'text',
-              text: "#{date}の予定\n#{today_plans}"
-            }
           elsif event.message['text'] == "追加"
             #予定追加する際の、送信内容を送信
             message = {
               type: 'text',
               text: "下記に倣って、送信ください！\n\n追加\n日付（半角数字8桁）\n内容"
             }
-          elsif event.message['text'].slice(0,2) == "追加"
+
+          elsif event.message['text'].slice(0,3) == "追加\n"
             #予定追加のリクエスト
             user = event['source']['userId']
             date = event.text.slice(3,8)
@@ -68,6 +79,7 @@ class LineBotController < ApplicationController
                 text: "送信された内容に不備があります。もう一度送信ください。"
               }
             end
+
           else
             message = {
               type: 'text',
