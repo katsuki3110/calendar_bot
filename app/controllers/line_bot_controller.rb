@@ -47,7 +47,7 @@ class LineBotController < ApplicationController
               #今日の予定を送信
               message = {
                 type: 'text',
-                text: "#{date}の予定\n#{today_plans}"
+                text: "今日の予定は、\n#{today_plans}"
               }
             else
               #今日の予定がない場合
