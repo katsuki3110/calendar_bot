@@ -13,6 +13,9 @@ class LineBotController < ApplicationController
     events = client.parse_events_from(body)
     events.each do |event|
 
+      #user情報の取得
+      user = event['source']['userId']
+
       case event
       when Line::Bot::Event::Message
         case event.type
@@ -21,7 +24,7 @@ class LineBotController < ApplicationController
             #全体の使い方
             message = {
               type: 'text',
-              text: "下記から選択ください！\n\n①今日の予定を知りたい ⇒ 今日の予定\n②予定を追加したい ⇒ 予定追加"
+              text: "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒'今日の予定'\n②予定を追加したい\n⇒'予定追加'"
             }
           elsif event.message['text'] == "今日の予定"
             #今日の予定がリクエスト
@@ -63,7 +66,6 @@ class LineBotController < ApplicationController
 
           elsif event.message['text'].slice(0,3) == "追加\n"
             #予定追加のリクエスト
-            user = event['source']['userId']
             date = event.text.slice(3,8)
             content = event.text.slice(12..)
             #リクエストされた予定をDBに保存
@@ -83,7 +85,7 @@ class LineBotController < ApplicationController
           else
             message = {
               type: 'text',
-              text: "下記から選択ください！\n①予定を追加したい ⇒ 予定追加\n②今日の予定を知りたい ⇒ 今日の予定"
+              text: "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒'今日の予定'\n②予定を追加したい\n⇒'予定追加'"
             }
           end
         end
