@@ -14,9 +14,9 @@ class LineBotController < ApplicationController
     events.each do |event|
 
       #説明内容を格納
-      explanation = "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒今日の予定\n②予定を追加したい\n⇒予定追加"
+      explanation = "下記から番号を選択し、入力ください！\n\n①今日の予定を知りたい\n⇒①\n②予定を追加したい\n⇒②"
       #予定追加時の送信内容
-      add_plan = "下記に倣って、送信ください！\n\n'追加'と記載\n日付（半角数字8桁）\n内容"
+      add_plan = "下記の例を参考に、入力ください！\n\n'追加'と入力\n日付（半角数字8桁）\n内容\n\n【例】\n追加\n20200804\n買い物に行く"
       #user情報の取得
       user = event['source']['userId']
 
@@ -30,7 +30,7 @@ class LineBotController < ApplicationController
               type: 'text',
               text: explanation
             }
-          elsif event.message['text'] == "今日の予定"
+          elsif event.message['text'] == "①"
 
             #今日の予定を一覧で抽出
             #今日の予定をDBより抽出
@@ -62,7 +62,7 @@ class LineBotController < ApplicationController
               }
             end
 
-          elsif event.message['text'] == "予定追加"
+          elsif event.message['text'] == "②"
             #予定追加する際の、送信内容を送信
             message = {
               type: 'text',
@@ -83,7 +83,7 @@ class LineBotController < ApplicationController
             else
               message = {
                 type: 'text',
-                text: "送信された内容に不備があります。もう一度送信ください。"
+                text: "送信された内容に不備があります。ご確認ください。"
               }
             end
 
@@ -110,40 +110,5 @@ class LineBotController < ApplicationController
       }
     end
 
-    def self.push_notificate
-      #リマインドメッセージの初期化
-      remind_message = ""
-      remind_users = Calendar.where(date: Date.tomorrow.strftime('%Y%m%d')).select("user").distinct
-
-      if remind_users.present?
-        for i in 0..remind_users.count - 1 do
-          #userを一つづつ処理する
-          remind_user = remind_users[i].user
-          remind_calendars = Calendar.where(user: remind_user)
-
-          for j in 0..remind_calendars.count - 1 do
-            #各userのcontent毎に処理する
-            remind_content = remind_calendars[j].content
-            if num == 0
-              remind_message = "・" + remind_content
-            else
-              remind_message = remind_message + "\n・" + remind_content
-            end
-          end
-
-          message = {
-            to:   remind_user,
-            type: 'text',
-            text: remind_message
-          }
-          #プッシュ通知送信
-          client.reply_message(event['replyToken'], message)
-
-        end
-      end
-
-
-    end
-
-
+    
 end
