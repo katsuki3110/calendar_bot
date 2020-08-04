@@ -1,0 +1,4 @@
+class Batch::Auto
+
+
+end

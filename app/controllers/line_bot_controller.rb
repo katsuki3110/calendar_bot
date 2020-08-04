@@ -110,10 +110,10 @@ class LineBotController < ApplicationController
       }
     end
 
-    def push_notification
+    def self.push_notificate
       #リマインドメッセージの初期化
       remind_message = ""
-      remind_users = Calendar.select("user").dinstinct
+      remind_users = Calendar.where(date: Date.yesterday.strftime('%Y%m%d')).select("user").distinct
 
       for i in 0..remind_users.count - 1 do
         #userを一つづつ処理する
