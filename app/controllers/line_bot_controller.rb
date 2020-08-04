@@ -13,9 +13,6 @@ class LineBotController < ApplicationController
     events = client.parse_events_from(body)
     events.each do |event|
 
-      #リクエストしたuserを格納
-      user = event.source.userId
-
       case event
       when Line::Bot::Event::Message
         case event.type
@@ -55,6 +52,7 @@ class LineBotController < ApplicationController
             }
           elsif event.text.slice(0,2) == "追加"
             #予定追加のリクエスト
+            user = event['source']['userId']
             date = event.text.slice(3,8)
             content = event.text.slice(12..)
             #リクエストされた予定をDBに保存
@@ -85,11 +83,11 @@ class LineBotController < ApplicationController
 
   private
 
-  def client
-    @client ||= Line::Bot::Client.new {|config|
-      config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
-      config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
-    }
-  end
+    def client
+      @client ||= Line::Bot::Client.new {|config|
+        config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
+        config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
+      }
+    end
 
 end
