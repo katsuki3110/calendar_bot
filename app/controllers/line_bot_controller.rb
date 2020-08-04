@@ -61,7 +61,7 @@ class LineBotController < ApplicationController
             #予定追加する際の、送信内容を送信
             message = {
               type: 'text',
-              text: "下記に倣って、送信ください！\n\nアクション選択（'追加'と入力）\n日付（半角数字8桁）\n内容"
+              text: "下記に倣って、送信ください！\n\n'追加'と記載\n日付（半角数字8桁）\n内容"
             }
 
           elsif event.message['text'].slice(0,2) == "追加"
