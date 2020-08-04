@@ -64,7 +64,7 @@ class LineBotController < ApplicationController
               text: "下記に倣って、送信ください！\n\nアクション選択（'追加'と入力）\n日付（半角数字8桁）\n内容"
             }
 
-          elsif event.message['text'].slice(0,3) == "追加"
+          elsif event.message['text'].slice(0,2) == "追加"
             #予定追加のリクエスト
             date = event.message['text'].slice(3,8)
             content = event.message['text'].slice(12..)
