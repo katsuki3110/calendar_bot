@@ -20,7 +20,7 @@
 # Learn more: http://github.com/javan/whenever
 
 
-every 1.day, at: '6:00 am' do
+every 1.day, at: '10:00 pm' do
 #every 1.minute do
   runner "LineBotController.push_notificate"
 end

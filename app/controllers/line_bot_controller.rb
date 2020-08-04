@@ -113,32 +113,36 @@ class LineBotController < ApplicationController
     def self.push_notificate
       #リマインドメッセージの初期化
       remind_message = ""
-      remind_users = Calendar.where(date: Date.yesterday.strftime('%Y%m%d')).select("user").distinct
+      remind_users = Calendar.where(date: Date.tomorrow.strftime('%Y%m%d')).select("user").distinct
 
-      for i in 0..remind_users.count - 1 do
-        #userを一つづつ処理する
-        remind_user = remind_users[i].user
-        remind_calendars = Calendar.where(user: remind_user)
+      if remind_users.present?
+        for i in 0..remind_users.count - 1 do
+          #userを一つづつ処理する
+          remind_user = remind_users[i].user
+          remind_calendars = Calendar.where(user: remind_user)
 
-        for j in 0..remind_calendars.count - 1 do
-          #各userのcontent毎に処理する
-          remind_content = remind_calendars[j].content
-          if num == 0
-            remind_message = "・" + remind_content
-          else
-            remind_message = remind_message + "\n・" + remind_content
+          for j in 0..remind_calendars.count - 1 do
+            #各userのcontent毎に処理する
+            remind_content = remind_calendars[j].content
+            if num == 0
+              remind_message = "・" + remind_content
+            else
+              remind_message = remind_message + "\n・" + remind_content
+            end
           end
+
+          message = {
+            to:   remind_user,
+            type: 'text',
+            text: remind_message
+          }
+          #プッシュ通知送信
+          client.reply_message(event['replyToken'], message)
+
         end
-
-        message = {
-          to:   remind_user,
-          type: 'text',
-          text: remind_message
-        }
-        #プッシュ通知送信
-        client.reply_message(event['replyToken'], message)
-
       end
+
+
     end
 
 
