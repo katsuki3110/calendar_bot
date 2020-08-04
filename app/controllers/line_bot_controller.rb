@@ -17,13 +17,13 @@ class LineBotController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          if event.text == "説明"
+          if event.message['text'] == "説明"
             #全体の使い方
             message = {
               type: 'text',
               text: "下記から選択ください！\n\n①今日の予定を知りたい ⇒ 今日の予定\n②予定を追加したい ⇒ 予定追加"
             }
-          elsif event.text == "今日の予定"
+          elsif event.message['text'] == "今日の予定"
             #今日の予定がリクエスト
             #今日の予定をDBより抽出
             today_calendar = Calendar.where(user: user, date: Date.today.strftime('%Y%m%d')).select("content")
@@ -44,13 +44,13 @@ class LineBotController < ApplicationController
               type: 'text',
               text: "#{date}の予定\n#{today_plans}"
             }
-          elsif event.text == "追加"
+          elsif event.message['text'] == "追加"
             #予定追加する際の、送信内容を送信
             message = {
               type: 'text',
               text: "下記に倣って、送信ください！\n\n追加\n日付（半角数字8桁）\n内容"
             }
-          elsif event.text.slice(0,2) == "追加"
+          elsif event.message['text'].slice(0,2) == "追加"
             #予定追加のリクエスト
             user = event['source']['userId']
             date = event.text.slice(3,8)
