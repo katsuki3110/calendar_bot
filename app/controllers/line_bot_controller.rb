@@ -24,7 +24,7 @@ class LineBotController < ApplicationController
             #全体の使い方
             message = {
               type: 'text',
-              text: "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒'今日の予定'\n②予定を追加したい\n⇒'予定追加'"
+              text: "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒今日の予定\n②予定を追加したい\n⇒予定追加"
             }
           elsif event.message['text'] == "今日の予定"
             #今日の予定がリクエスト
@@ -57,17 +57,17 @@ class LineBotController < ApplicationController
               }
             end
 
-          elsif event.message['text'] == "追加"
+          elsif event.message['text'] == "予定追加"
             #予定追加する際の、送信内容を送信
             message = {
               type: 'text',
-              text: "下記に倣って、送信ください！\n\n追加\n日付（半角数字8桁）\n内容"
+              text: "下記に倣って、送信ください！\n\nアクション選択（'追加'と入力）\n日付（半角数字8桁）\n内容"
             }
 
-          elsif event.message['text'].slice(0,3) == "追加\n"
+          elsif event.message['text'].slice(0,3) == "追加"
             #予定追加のリクエスト
-            date = event.text.slice(3,8)
-            content = event.text.slice(12..)
+            date = event.message['text'].slice(3,8)
+            content = event.message['text'].slice(12..)
             #リクエストされた予定をDBに保存
             plan = Calendar.new(user: user, date: date, content: content)
             if plan.save
@@ -85,7 +85,7 @@ class LineBotController < ApplicationController
           else
             message = {
               type: 'text',
-              text: "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒'今日の予定'\n②予定を追加したい\n⇒'予定追加'"
+              text: "下記から選択し、送信ください！\n\n①今日の予定を知りたい\n⇒今日の予定\n②予定を追加したい\n⇒予定追加"
             }
           end
         end
