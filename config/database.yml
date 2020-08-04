@@ -14,7 +14,7 @@ default: &default
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: 22954473kA
+  password: <%= ENV['ROOT_DATABASE_PASSWORD'] %>
   host: localhost
 
 development:
@@ -50,5 +50,5 @@ test:
 production:
   <<: *default
   database: calendar_bot_production
-  username: calendar_bot
-  password: <%= ENV['CALENDAR_BOT_DATABASE_PASSWORD'] %>
+  username: root
+  password: <%= ENV['ROOT_DATABASE_PASSWORD'] %>
