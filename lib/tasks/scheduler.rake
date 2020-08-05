@@ -13,15 +13,15 @@ task :push_notificate => :environment do
       for j in 0..remind_calendars.count - 1 do
         #各userのcontent毎に処理する
         remind_content = remind_calendars[j].content
-        if num == 0
+        if j == 0
           remind_message = "・" + remind_content
         else
           remind_message = remind_message + "\n・" + remind_content
         end
       end
 
+      to = remind_user,
       message = {
-        to:   remind_user,
         type: 'text',
         text: "明日の予定は、\n\n" + remind_message + "\n\nです！"
       }
@@ -39,5 +39,5 @@ task :push_notificate => :environment do
         config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
       }
     end
-    
+
 end
