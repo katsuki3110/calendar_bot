@@ -8,7 +8,7 @@ task :push_notificate => :environment do
     for i in 0..remind_users.count - 1 do
       #userを一つづつ処理する
       remind_user = remind_users[i].user
-      remind_calendars = Calendar.where(user: remind_user)
+      remind_calendars = Calendar.where(user: remind_user, date: Date.tomorrow.strftime('%Y%m%d'))
 
       for j in 0..remind_calendars.count - 1 do
         #各userのcontent毎に処理する
