@@ -20,7 +20,6 @@ task :push_notificate => :environment do
         end
       end
 
-      to = remind_user,
       message = {
         type: 'text',
         text: "明日の予定は、\n\n" + remind_message + "\n\nです！"
@@ -30,7 +29,7 @@ task :push_notificate => :environment do
         config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
       }
       #プッシュ通知送信
-      client.push_message(ENV["LINE_CHANNEL_USER_ID"], message)
+      client.push_message(remind_user, message)
 
     end
   end
