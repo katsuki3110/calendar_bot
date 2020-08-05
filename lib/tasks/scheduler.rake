@@ -25,19 +25,14 @@ task :push_notificate => :environment do
         type: 'text',
         text: "明日の予定は、\n\n" + remind_message + "\n\nです！"
       }
-      #プッシュ通知送信
-      client.reply_message(event['replyToken'], message)
-
-    end
-  end
-
-  private
-
-    def client
-      @client ||= Line::Bot::Client.new {|config|
+      client ||= Line::Bot::Client.new {|config|
         config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
         config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
       }
+      #プッシュ通知送信
+      client.push_message(ENV["LINE_CHANNEL_USER_ID"], message)
+
     end
+  end
 
 end
